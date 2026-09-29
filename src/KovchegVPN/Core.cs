@@ -39,9 +39,6 @@ public static class Core
         "domain:mycdn.me", "domain:ozonstatic.net", "domain:wstatic.net",
         "domain:2gis.com",
     };
-    // Сплит/geosite не должны утащить их в РФ-direct. Instagram и Cursor IDE —
-    // отдельный SS без mux: HTTP/2 иначе ловит CANCEL. Telegram — другой
-    // outbound с mux, иначе с дома сотни TCP и LigaLink душит все сайты.
     private static readonly string[] DomainForceProxy =
     {
         "domain:instagram.com", "domain:cdninstagram.com", "domain:ig.me",
@@ -58,7 +55,6 @@ public static class Core
         "domain:ytimg.com", "domain:ggpht.com", "domain:youtube-nocookie.com",
         "domain:youtubei.googleapis.com", "full:youtube.googleapis.com",
         "domain:googleusercontent.com",
-        // Охота ядра (icanhazip) иначе идёт в default mux и LigaLink её вешает.
         "domain:icanhazip.com", "domain:ipify.org",
         "full:checkip.amazonaws.com",
     };
@@ -68,5 +64,25 @@ public static class Core
         "domain:cdn-telegram.org",
     };
 
-PLACEHOLDER_INCOMPLETE
+    public static async Task<string?> FindLive(bool log = true)
+    {
+        var tasks = Cfg.Endpoints.Select(async e =>
+        {
+            string url = e.Kind == "socks" ? $"socks5://127.0.0.1:{e.Port}" : $"http://127.0.0.1:{e.Port}";
+            string? ip = await Probe.ExitIp(url, 4, maxTries: 1);
+            return (e.Kind, e.Port, ip);
+        }).ToArray();
+        var results = await Task.WhenAll(tasks);
+        if (log)
+            foreach (var r in results)
+                LogBus.Write($"core: {r.Kind} {r.Port} -> {r.ip ?? "нет"}");
+        foreach (var (kind, port, ip) in results)
+            if (Cfg.IsOurs(ip)) return $"{kind}:{port}";
+        return null;
+    }
+
+    public static bool OwnAlive()
+    {
+        try { return _own is { HasExited: false }; } catch { return false; }
+    }
 }
