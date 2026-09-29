@@ -1,0 +1,886 @@
+<Window x:Class="KovchegVPN.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="KovchegVPN" Width="380" Height="640"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Icon="Resources/logo.png" FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <!-- Дыхание розового свечения за лавой -->
+        <Storyboard x:Key="AmbientGlowStory" RepeatBehavior="Forever" AutoReverse="True">
+            <DoubleAnimation Storyboard.TargetName="BgGlowCenter" Storyboard.TargetProperty="Opacity"
+                             From="0.35" To="0.9" Duration="0:0:5.2"/>
+            <DoubleAnimation Storyboard.TargetName="BgGlowScale" Storyboard.TargetProperty="ScaleX"
+                             From="0.88" To="1.18" Duration="0:0:5.2"/>
+            <DoubleAnimation Storyboard.TargetName="BgGlowScale" Storyboard.TargetProperty="ScaleY"
+                             From="0.88" To="1.18" Duration="0:0:5.2"/>
+        </Storyboard>
+
+        <!-- Лава-лампа: капли всплывают, мерцают, чуть меняют форму -->
+        <Storyboard x:Key="LavaLampStory">
+            <DoubleAnimation Storyboard.TargetName="Lava1T" Storyboard.TargetProperty="Y"
+                             From="40" To="-90" Duration="0:0:13" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Lava1T" Storyboard.TargetProperty="X"
+                             From="-28" To="36" Duration="0:0:9.5" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Lava1S" Storyboard.TargetProperty="ScaleX"
+                             From="0.92" To="1.12" Duration="0:0:7.4" AutoReverse="True" RepeatBehavior="Forever"/>
+            <DoubleAnimation Storyboard.TargetName="Lava1S" Storyboard.TargetProperty="ScaleY"
+                             From="1.08" To="0.9" Duration="0:0:8.1" AutoReverse="True" RepeatBehavior="Forever"/>
+
+            <DoubleAnimation Storyboard.TargetName="Lava2T" Storyboard.TargetProperty="Y"
+                             From="-30" To="110" Duration="0:0:16" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Lava2T" Storyboard.TargetProperty="X"
+                             From="40" To="-50" Duration="0:0:11" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Lava2S" Storyboard.TargetProperty="ScaleX"
+                             From="1.1" To="0.86" Duration="0:0:9" AutoReverse="True" RepeatBehavior="Forever"/>
+            <DoubleAnimation Storyboard.TargetName="Lava2S" Storyboard.TargetProperty="ScaleY"
+                             From="0.88" To="1.14" Duration="0:0:10.2" AutoReverse="True" RepeatBehavior="Forever"/>
+
+            <DoubleAnimation Storyboard.TargetName="Lava3T" Storyboard.TargetProperty="Y"
+                             From="80" To="-70" Duration="0:0:10.5" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Lava3T" Storyboard.TargetProperty="X"
+                             From="20" To="-18" Duration="0:0:14" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Lava3S" Storyboard.TargetProperty="ScaleX"
+                             From="0.8" To="1.2" Duration="0:0:6.8" AutoReverse="True" RepeatBehavior="Forever"/>
+            <DoubleAnimation Storyboard.TargetName="Lava3S" Storyboard.TargetProperty="ScaleY"
+                             From="1.15" To="0.85" Duration="0:0:7.6" AutoReverse="True" RepeatBehavior="Forever"/>
+
+            <DoubleAnimation Storyboard.TargetName="Lava4T" Storyboard.TargetProperty="Y"
+                             From="-50" To="70" Duration="0:0:12.2" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Lava4T" Storyboard.TargetProperty="X"
+                             From="-40" To="30" Duration="0:0:8.6" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="Lava5T" Storyboard.TargetProperty="Y"
+                             From="20" To="-100" Duration="0:0:18" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Lava5T" Storyboard.TargetProperty="X"
+                             From="10" To="48" Duration="0:0:13.4" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Lava5S" Storyboard.TargetProperty="ScaleX"
+                             From="0.95" To="1.22" Duration="0:0:11" AutoReverse="True" RepeatBehavior="Forever"/>
+
+            <DoubleAnimation Storyboard.TargetName="Spark1" Storyboard.TargetProperty="Opacity"
+                             From="0.15" To="0.95" Duration="0:0:1.8" AutoReverse="True" RepeatBehavior="Forever"/>
+            <DoubleAnimation Storyboard.TargetName="Spark2" Storyboard.TargetProperty="Opacity"
+                             From="0.1" To="0.85" Duration="0:0:2.4" AutoReverse="True" RepeatBehavior="Forever" BeginTime="0:0:0.6"/>
+            <DoubleAnimation Storyboard.TargetName="Spark3" Storyboard.TargetProperty="Opacity"
+                             From="0.2" To="0.9" Duration="0:0:1.4" AutoReverse="True" RepeatBehavior="Forever" BeginTime="0:0:0.3"/>
+            <DoubleAnimation Storyboard.TargetName="Spark4" Storyboard.TargetProperty="Opacity"
+                             From="0.05" To="0.7" Duration="0:0:3.1" AutoReverse="True" RepeatBehavior="Forever" BeginTime="0:0:1.1"/>
+        </Storyboard>
+
+        <!-- Непрерывное дыхание кольца кнопки (включено) -->
+        <Storyboard x:Key="ButtonGlowStory" RepeatBehavior="Forever" AutoReverse="True">
+            <DoubleAnimation Storyboard.TargetName="RingGlowEffect" Storyboard.TargetProperty="BlurRadius"
+                             From="16" To="36" Duration="0:0:2"/>
+            <DoubleAnimation Storyboard.TargetName="RingGlowEffect" Storyboard.TargetProperty="Opacity"
+                             From="0.5" To="0.95" Duration="0:0:2"/>
+            <DoubleAnimation Storyboard.TargetName="Aura" Storyboard.TargetProperty="Opacity"
+                             From="0.25" To="0.65" Duration="0:0:2"/>
+        </Storyboard>
+
+        <!-- Подключение: расходящиеся круглые импульсные волны из центра кнопки -->
+        <Storyboard x:Key="PulseWaveStory" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="Wave1Scale" Storyboard.TargetProperty="ScaleX"
+                             From="0.95" To="1.85" Duration="0:0:2"/>
+            <DoubleAnimation Storyboard.TargetName="Wave1Scale" Storyboard.TargetProperty="ScaleY"
+                             From="0.95" To="1.85" Duration="0:0:2"/>
+            <DoubleAnimation Storyboard.TargetName="Wave1" Storyboard.TargetProperty="Opacity"
+                             From="0.65" To="0" Duration="0:0:2"/>
+
+            <DoubleAnimation Storyboard.TargetName="Wave2Scale" Storyboard.TargetProperty="ScaleX"
+                             From="0.95" To="1.85" Duration="0:0:2" BeginTime="0:0:0.66"/>
+            <DoubleAnimation Storyboard.TargetName="Wave2Scale" Storyboard.TargetProperty="ScaleY"
+                             From="0.95" To="1.85" Duration="0:0:2" BeginTime="0:0:0.66"/>
+            <DoubleAnimation Storyboard.TargetName="Wave2" Storyboard.TargetProperty="Opacity"
+                             From="0.65" To="0" Duration="0:0:2" BeginTime="0:0:0.66"/>
+
+            <DoubleAnimation Storyboard.TargetName="Wave3Scale" Storyboard.TargetProperty="ScaleX"
+                             From="0.95" To="1.85" Duration="0:0:2" BeginTime="0:0:1.33"/>
+            <DoubleAnimation Storyboard.TargetName="Wave3Scale" Storyboard.TargetProperty="ScaleY"
+                             From="0.95" To="1.85" Duration="0:0:2" BeginTime="0:0:1.33"/>
+            <DoubleAnimation Storyboard.TargetName="Wave3" Storyboard.TargetProperty="Opacity"
+                             From="0.65" To="0" Duration="0:0:2" BeginTime="0:0:1.33"/>
+        </Storyboard>
+
+        <Style x:Key="WindowBtn" TargetType="Button">
+            <Setter Property="Foreground" Value="#C48AA0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="8" Background="Transparent">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#3A1428"/>
+                                <Setter Property="Foreground" Value="#FFC4D8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AnonWindowBtn" TargetType="Button">
+            <Setter Property="Foreground" Value="#2FBF5A"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="4" Background="Transparent">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#0E2A16"/>
+                                <Setter Property="Foreground" Value="#33FF66"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SegmentButton" TargetType="Button">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" CornerRadius="12"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Border x:Name="RootBorder" CornerRadius="24" BorderBrush="#66FF8FB8" BorderThickness="1.4">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.15,0" EndPoint="0.9,1">
+                    <GradientStop x:Name="BgStop0" Color="#2A0814" Offset="0"/>
+                    <GradientStop x:Name="BgStop1" Color="#1A0610" Offset="0.45"/>
+                    <GradientStop x:Name="BgStop2" Color="#12040C" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect x:Name="WindowShadow" BlurRadius="40" ShadowDepth="0" Opacity="0.75" Color="#FF6BA8"/>
+            </Border.Effect>
+
+            <Grid ClipToBounds="True">
+                <Grid.Clip>
+                    <RectangleGeometry Rect="0,0,380,640" RadiusX="24" RadiusY="24"/>
+                </Grid.Clip>
+
+                <!-- Лава-лампа: крупные розовые капли + блёстки -->
+                <Canvas x:Name="LavaCanvas" IsHitTestVisible="False" Width="380" Height="640">
+                    <Ellipse x:Name="BgGlowCenter" Width="420" Height="420" Canvas.Left="-20" Canvas.Top="90"
+                             RenderTransformOrigin="0.5,0.5" Opacity="0.55">
+                        <Ellipse.RenderTransform>
+                            <ScaleTransform x:Name="BgGlowScale" ScaleX="1" ScaleY="1"/>
+                        </Ellipse.RenderTransform>
+                        <Ellipse.Fill>
+                            <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+                                <GradientStop Color="#70FF6BA8" Offset="0"/>
+                                <GradientStop Color="#38FF8FB8" Offset="0.45"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+
+                    <!-- Коралл -->
+                    <Ellipse Width="260" Height="280" Canvas.Left="-70" Canvas.Top="180" Opacity="0.9"
+                             RenderTransformOrigin="0.5,0.5">
+                        <Ellipse.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform x:Name="Lava1S" ScaleX="1" ScaleY="1"/>
+                                <TranslateTransform x:Name="Lava1T"/>
+                            </TransformGroup>
+                        </Ellipse.RenderTransform>
+                        <Ellipse.Effect>
+                            <BlurEffect Radius="38"/>
+                        </Ellipse.Effect>
+                        <Ellipse.Fill>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#E8FF8FB0" Offset="0"/>
+                                <GradientStop Color="#90FF5A8C" Offset="0.45"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+
+                    <!-- Персик -->
+                    <Ellipse Width="240" Height="220" Canvas.Left="160" Canvas.Top="60" Opacity="0.85"
+                             RenderTransformOrigin="0.5,0.5">
+                        <Ellipse.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform x:Name="Lava2S" ScaleX="1" ScaleY="1"/>
+                                <TranslateTransform x:Name="Lava2T"/>
+                            </TransformGroup>
+                        </Ellipse.RenderTransform>
+                        <Ellipse.Effect>
+                            <BlurEffect Radius="42"/>
+                        </Ellipse.Effect>
+                        <Ellipse.Fill>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#F0FFC4B0" Offset="0"/>
+                                <GradientStop Color="#88FF9E8C" Offset="0.5"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+
+                    <!-- Баблгам -->
+                    <Ellipse Width="190" Height="210" Canvas.Left="90" Canvas.Top="340" Opacity="0.88"
+                             RenderTransformOrigin="0.5,0.5">
+                        <Ellipse.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform x:Name="Lava3S" ScaleX="1" ScaleY="1"/>
+                                <TranslateTransform x:Name="Lava3T"/>
+                            </TransformGroup>
+                        </Ellipse.RenderTransform>
+                        <Ellipse.Effect>
+                            <BlurEffect Radius="32"/>
+                        </Ellipse.Effect>
+                        <Ellipse.Fill>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#FFFFB6D0" Offset="0"/>
+                                <GradientStop Color="#A0FF6BA8" Offset="0.42"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+
+                    <!-- Сирень -->
+                    <Ellipse Width="200" Height="180" Canvas.Left="200" Canvas.Top="380" Opacity="0.7"
+                             RenderTransformOrigin="0.5,0.5">
+                        <Ellipse.RenderTransform>
+                            <TranslateTransform x:Name="Lava4T"/>
+                        </Ellipse.RenderTransform>
+                        <Ellipse.Effect>
+                            <BlurEffect Radius="36"/>
+                        </Ellipse.Effect>
+                        <Ellipse.Fill>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#C0E879F9" Offset="0"/>
+                                <GradientStop Color="#70C026D3" Offset="0.5"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+
+                    <!-- Верхняя капля -->
+                    <Ellipse Width="170" Height="160" Canvas.Left="40" Canvas.Top="-20" Opacity="0.75"
+                             RenderTransformOrigin="0.5,0.5">
+                        <Ellipse.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform x:Name="Lava5S" ScaleX="1" ScaleY="1"/>
+                                <TranslateTransform x:Name="Lava5T"/>
+                            </TransformGroup>
+                        </Ellipse.RenderTransform>
+                        <Ellipse.Effect>
+                            <BlurEffect Radius="28"/>
+                        </Ellipse.Effect>
+                        <Ellipse.Fill>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#D0FFD1DC" Offset="0"/>
+                                <GradientStop Color="#80FF8FB8" Offset="0.48"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+
+                    <Ellipse x:Name="Spark1" Width="5" Height="5" Fill="#FFFFF5F8" Canvas.Left="72" Canvas.Top="168"
+                             Opacity="0.4">
+                        <Ellipse.Effect>
+                            <BlurEffect Radius="2"/>
+                        </Ellipse.Effect>
+                    </Ellipse>
+                    <Ellipse x:Name="Spark2" Width="4" Height="4" Fill="#FFFFC4D8" Canvas.Left="280" Canvas.Top="240"
+                             Opacity="0.35">
+                        <Ellipse.Effect>
+                            <BlurEffect Radius="2"/>
+                        </Ellipse.Effect>
+                    </Ellipse>
+                    <Ellipse x:Name="Spark3" Width="6" Height="6" Fill="#FFFFFFFF" Canvas.Left="198" Canvas.Top="92"
+                             Opacity="0.5">
+                        <Ellipse.Effect>
+                            <BlurEffect Radius="3"/>
+                        </Ellipse.Effect>
+                    </Ellipse>
+                    <Ellipse x:Name="Spark4" Width="3" Height="3" Fill="#FFFFE4EC" Canvas.Left="310" Canvas.Top="460"
+                             Opacity="0.3"/>
+                </Canvas>
+
+                <!-- Тёмная тема: луч сверху + виньетка по углам -->
+                <Canvas x:Name="AnonFx" IsHitTestVisible="False" Width="380" Height="640" Visibility="Collapsed">
+                    <Ellipse Width="300" Height="150" Canvas.Left="40" Canvas.Top="-75" Opacity="0.9">
+                        <Ellipse.Fill>
+                            <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+                                <GradientStop x:Name="TopGlowIn" Color="#99FFD8D8" Offset="0"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <Path Data="M 140,0 L 240,0 L 330,430 L 50,430 Z">
+                        <Path.Effect>
+                            <BlurEffect Radius="30"/>
+                        </Path.Effect>
+                        <Path.Fill>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop x:Name="BeamOuterTop" Color="#2EFF4444" Offset="0"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Path.Fill>
+                    </Path>
+                    <Path Data="M 165,0 L 215,0 L 280,430 L 100,430 Z">
+                        <Path.Effect>
+                            <BlurEffect Radius="22"/>
+                        </Path.Effect>
+                        <Path.Fill>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop x:Name="BeamTop" Color="#55FF9A9A" Offset="0"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Path.Fill>
+                    </Path>
+                    <Rectangle Width="380" Height="640">
+                        <Rectangle.Fill>
+                            <RadialGradientBrush Center="0.5,0.42" GradientOrigin="0.5,0.42" RadiusX="0.75" RadiusY="0.75">
+                                <GradientStop Color="#00000000" Offset="0"/>
+                                <GradientStop Color="#00000000" Offset="0.55"/>
+                                <GradientStop Color="#8C000000" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Canvas>
+
+                <!-- Стеклянный блик сверху -->
+                <Border CornerRadius="24" IsHitTestVisible="False">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,0.38">
+                            <GradientStop Color="#38FFFFFF" Offset="0"/>
+                            <GradientStop Color="#00FFFFFF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+
+                <!-- Сканлайны для темы анонимуса -->
+                <Border x:Name="Scanlines" Visibility="Collapsed" CornerRadius="24" IsHitTestVisible="False" Opacity="0.13">
+                    <Border.Background>
+                        <DrawingBrush TileMode="Tile" Viewport="0,0,1,3" ViewportUnits="Absolute" Stretch="None">
+                            <DrawingBrush.Drawing>
+                                <GeometryDrawing Brush="Black">
+                                    <GeometryDrawing.Geometry>
+                                        <RectangleGeometry Rect="0,0,1,1"/>
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                            </DrawingBrush.Drawing>
+                        </DrawingBrush>
+                    </Border.Background>
+                </Border>
+
+                <!-- ОСНОВНОЙ КОНТЕНТ -->
+                <Grid Margin="22,12,22,20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="36"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" MouseLeftButtonDown="TitleDrag" Background="Transparent">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="Resources/logo.png" Width="26" Height="26" VerticalAlignment="Center"/>
+                            <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                <TextBlock x:Name="BrandText" Text="KOVCHEG VPN" FontSize="11.5" FontWeight="Bold" Foreground="#FFC4D8"/>
+                                <TextBlock x:Name="TitleVer" Text="v1.5.2" FontSize="9.5" Foreground="#C48AA0" Margin="0,-1,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Button x:Name="ThemeBtn" Style="{StaticResource WindowBtn}" Content="◑" Click="ThemeBtn_Click"
+                                    ToolTip="Сменить тему: розовая / анонимус"/>
+                            <Button x:Name="MinBtn" Style="{StaticResource WindowBtn}" Content="–" Click="BtnMin_Click"/>
+                            <Button x:Name="CloseBtn" Style="{StaticResource WindowBtn}" Content="✕" Click="BtnClose_Click"
+                                    ToolTip="Выход — закрыть совсем"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="1" VerticalAlignment="Center">
+                        <StackPanel HorizontalAlignment="Center">
+
+                            <TextBlock x:Name="AnonStatus" Text="NOT CONNECTED" FontSize="11" FontWeight="Bold" FontFamily="Consolas"
+                                       Foreground="#5A6A5E" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                            <TextBlock x:Name="TimerText" Text="--:--:--" FontSize="24" FontWeight="Light" FontFamily="Consolas"
+                                       Foreground="#7DFF9E" HorizontalAlignment="Center" Visibility="Collapsed" Margin="0,2,0,4"/>
+                            <Grid x:Name="PowerGrid" Width="220" Height="220" HorizontalAlignment="Center">
+
+                                <Ellipse x:Name="Aura" Width="220" Height="220" Opacity="0" IsHitTestVisible="False">
+                                    <Ellipse.Fill>
+                                        <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+                                            <GradientStop Color="#70FF6BA8" Offset="0.35"/>
+                                            <GradientStop Color="#38FF8FB8" Offset="0.75"/>
+                                            <GradientStop Color="#00000000" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+
+                                <Ellipse x:Name="Wave1" Width="170" Height="170" Stroke="#FF6BA8" StrokeThickness="2"
+                                         Opacity="0" RenderTransformOrigin="0.5,0.5" IsHitTestVisible="False">
+                                    <Ellipse.RenderTransform>
+                                        <ScaleTransform x:Name="Wave1Scale"/>
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+
+                                <Ellipse x:Name="Wave2" Width="170" Height="170" Stroke="#FFC4D8" StrokeThickness="2"
+                                         Opacity="0" RenderTransformOrigin="0.5,0.5" IsHitTestVisible="False">
+                                    <Ellipse.RenderTransform>
+                                        <ScaleTransform x:Name="Wave2Scale"/>
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+
+                                <Ellipse x:Name="Wave3" Width="170" Height="170" Stroke="#FF9EC8" StrokeThickness="2"
+                                         Opacity="0" RenderTransformOrigin="0.5,0.5" IsHitTestVisible="False">
+                                    <Ellipse.RenderTransform>
+                                        <ScaleTransform x:Name="Wave3Scale"/>
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+
+                                <!-- Кольцо скорости: дуга загрузки + тонкая дуга отдачи -->
+                                <Ellipse x:Name="SpeedTrack" Width="196" Height="196" Stroke="#4A1832" StrokeThickness="5"
+                                         Opacity="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                <Path x:Name="SpeedArcDown" Stroke="#FF6BA8" StrokeThickness="6" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                      Width="220" Height="220" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                                    <Path.Effect>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.8" Color="#FF6BA8"/>
+                                    </Path.Effect>
+                                </Path>
+                                <Path x:Name="SpeedArcUp" Stroke="#FFC4B0" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Opacity="0.9"
+                                      Width="220" Height="220" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
+
+                                <Ellipse x:Name="Ring" Width="176" Height="176" Stroke="#5A2A3C" StrokeThickness="3"
+                                         HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect x:Name="RingGlowEffect" BlurRadius="20" ShadowDepth="0" Opacity="0" Color="#FF6BA8"/>
+                                    </Ellipse.Effect>
+                                </Ellipse>
+
+                                <Button x:Name="PowerBtn" Width="150" Height="150"
+                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        Cursor="Hand" Click="Power_Click">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid>
+                                                <Ellipse Fill="#2A0814"/>
+                                                <Ellipse x:Name="BtnSurface" Margin="2" Stroke="#6A3048" StrokeThickness="1.8">
+                                                    <Ellipse.Fill>
+                                                        <RadialGradientBrush Center="0.5,0.32" GradientOrigin="0.5,0.32" RadiusX="0.8" RadiusY="0.8">
+                                                            <GradientStop Color="#4A1832" Offset="0"/>
+                                                            <GradientStop Color="#2A101C" Offset="0.7"/>
+                                                            <GradientStop Color="#1A0810" Offset="1"/>
+                                                        </RadialGradientBrush>
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+                                                <!-- жемчужный блик -->
+                                                <Ellipse Width="70" Height="36" Margin="0,22,0,0" VerticalAlignment="Top"
+                                                         IsHitTestVisible="False" Opacity="0.35">
+                                                    <Ellipse.Fill>
+                                                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                            <GradientStop Color="#AAFFFFFF" Offset="0"/>
+                                                            <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+                                            </Grid>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="BtnSurface" Property="Stroke" Value="#FF6BA8"/>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="BtnSurface" Property="Margin" Value="4"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                                <TextBlock x:Name="Glyph" Text="⏻" FontFamily="Segoe UI Symbol" FontSize="48"
+                                           Foreground="#C47A9A" IsHitTestVisible="False"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect x:Name="GlyphGlow" BlurRadius="12" ShadowDepth="0" Opacity="0" Color="#FF6BA8"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+
+                                <!-- Спутник: кружится тем быстрее, чем выше скорость -->
+                                <Ellipse x:Name="OrbitDot" Width="9" Height="9" Fill="#FFF5F8" Opacity="0"
+                                         HorizontalAlignment="Left" VerticalAlignment="Top" Margin="105.5,105.5,0,0" IsHitTestVisible="False">
+                                    <Ellipse.RenderTransform>
+                                        <TranslateTransform x:Name="OrbitDotT"/>
+                                    </Ellipse.RenderTransform>
+                                    <Ellipse.Effect>
+                                        <BlurEffect Radius="2"/>
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                            </Grid>
+
+                            <!-- Сфера Джарвиса: центр тёмной темы -->
+                            <Grid x:Name="SphereGrid" Width="200" Height="200" Visibility="Collapsed"
+                                  HorizontalAlignment="Center" Cursor="Hand" Background="Transparent" MouseLeftButtonDown="Sphere_Click">
+                                <Ellipse x:Name="SphereHalo" Width="196" Height="196" Stroke="#4A1212" StrokeThickness="1"
+                                         StrokeDashArray="2 4" Opacity="0.6" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                         IsHitTestVisible="False"/>
+                                <Canvas x:Name="LedRing" Width="200" Height="200" IsHitTestVisible="False"/>
+                                <Ellipse x:Name="SphereGlow" Width="176" Height="176" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                         IsHitTestVisible="False" Opacity="0.45">
+                                    <Ellipse.Fill>
+                                        <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+                                            <GradientStop x:Name="GlowIn" Color="#5AFF4444" Offset="0"/>
+                                            <GradientStop Color="#00000000" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <Grid x:Name="SphereBall" Width="140" Height="140" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      RenderTransformOrigin="0.5,0.5" IsHitTestVisible="False">
+                                    <Grid.RenderTransform>
+                                        <ScaleTransform x:Name="SphereScale" ScaleX="1" ScaleY="1"/>
+                                    </Grid.RenderTransform>
+                                    <Ellipse x:Name="SphereBody" Width="140" Height="140">
+                                        <Ellipse.Fill>
+                                            <RadialGradientBrush Center="0.4,0.28" GradientOrigin="0.4,0.28" RadiusX="0.75" RadiusY="0.75">
+                                                <GradientStop x:Name="BodyHi" Color="#FF9A9A" Offset="0"/>
+                                                <GradientStop x:Name="BodyMid" Color="#C62F2F" Offset="0.45"/>
+                                                <GradientStop x:Name="BodyShade" Color="#521414" Offset="0.75"/>
+                                                <GradientStop x:Name="BodyEdge" Color="#130303" Offset="1"/>
+                                            </RadialGradientBrush>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <Ellipse x:Name="SphereCore" Width="92" Height="92" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                             Margin="0,-18,0,0" Opacity="0.55">
+                                        <Ellipse.Fill>
+                                            <RadialGradientBrush>
+                                                <GradientStop x:Name="CoreIn" Color="#FFD8D8" Offset="0"/>
+                                                <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                            </RadialGradientBrush>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <Ellipse Width="44" Height="26" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                             Margin="0,20,0,0" Opacity="0.5" IsHitTestVisible="False">
+                                        <Ellipse.Fill>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                                <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <Canvas x:Name="FaceCanvas" Width="140" Height="140" IsHitTestVisible="False">
+                                        <Canvas x:Name="EyeLC" Width="14" Height="18" Canvas.Left="44" Canvas.Top="50"
+                                                RenderTransformOrigin="0.5,0.5">
+                                            <Canvas.RenderTransform>
+                                                <ScaleTransform x:Name="EyeLScale" ScaleX="1" ScaleY="0.55"/>
+                                            </Canvas.RenderTransform>
+                                            <Ellipse Width="14" Height="18" Fill="#FFFFFF"/>
+                                        </Canvas>
+                                        <Canvas x:Name="EyeRC" Width="14" Height="18" Canvas.Left="82" Canvas.Top="50"
+                                                RenderTransformOrigin="0.5,0.5">
+                                            <Canvas.RenderTransform>
+                                                <ScaleTransform x:Name="EyeRScale" ScaleX="1" ScaleY="0.55"/>
+                                            </Canvas.RenderTransform>
+                                            <Ellipse Width="14" Height="18" Fill="#FFFFFF"/>
+                                        </Canvas>
+                                        <Path x:Name="MouthSmile" Stroke="#FFFFFF" StrokeThickness="3"
+                                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                              Data="M 54,84 Q 70,95 86,84"/>
+                                        <Ellipse x:Name="MouthOpen" Width="20" Height="24" Fill="#FFFFFF" Visibility="Collapsed"
+                                                 Canvas.Left="60" Canvas.Top="78" RenderTransformOrigin="0.5,0.5">
+                                            <Ellipse.RenderTransform>
+                                                <ScaleTransform x:Name="MouthScale" ScaleX="1" ScaleY="0.5"/>
+                                            </Ellipse.RenderTransform>
+                                        </Ellipse>
+                                    </Canvas>
+                                </Grid>
+                            </Grid>
+
+                            <TextBlock x:Name="PowerHint" Text="нажми, чтобы подключить" FontSize="10.5"
+                                       Foreground="#C48AA0" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+
+                            <StackPanel Margin="0,8,0,0" HorizontalAlignment="Center">
+                                <Border x:Name="StatusPill" CornerRadius="12" Padding="14,4"
+                                        Background="#332A101C" BorderBrush="#556A3048" BorderThickness="1"
+                                        HorizontalAlignment="Center">
+                                    <TextBlock x:Name="StatusText" Text="Отключено" FontSize="16" FontWeight="Bold"
+                                               Foreground="#C488A0" HorizontalAlignment="Center"/>
+                                </Border>
+
+                                <Border x:Name="IpPill" Background="#552A101C" CornerRadius="10" Padding="10,4" Margin="0,6,0,0"
+                                        BorderBrush="#556A3048" BorderThickness="1" HorizontalAlignment="Center">
+                                    <TextBlock x:Name="IpText" Text="IP: Не определен" FontSize="11.5" FontFamily="Consolas"
+                                               Foreground="#E4B0C4" HorizontalAlignment="Center"/>
+                                </Border>
+
+                                <TextBlock x:Name="SpeedText" Text="" FontSize="12.5" FontWeight="SemiBold"
+                                           Foreground="#FF6BA8" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+
+                                <TextBlock x:Name="RttText" Text="" FontSize="10.5" FontFamily="Consolas"
+                                           Foreground="#D4A0B4" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+
+                                <TextBlock x:Name="MsgText" Text="" FontSize="11" Foreground="#D4A0B4"
+                                           TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center"
+                                           MaxWidth="290" Margin="0,8,0,0" MinHeight="18"/>
+                            </StackPanel>
+
+                            <Grid x:Name="AnonStats" Visibility="Collapsed" Margin="0,6,0,0" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="8"/>
+                                    <ColumnDefinition Width="150"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Background="#0A0E0A" CornerRadius="10" BorderBrush="#1F4A2E" BorderThickness="1"
+                                        Padding="10,8" Width="150">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="DOWNLOAD ↓" FontSize="8.5" FontFamily="Consolas" Foreground="#5A6A5E"/>
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,0,0">
+                                            <Border Width="3" Height="20" CornerRadius="1.5" Background="#33FF66" Margin="0,0,8,0"/>
+                                            <TextBlock x:Name="DownText" Text="0.0" FontSize="20" FontWeight="Bold" FontFamily="Consolas" Foreground="#E8FFF0" VerticalAlignment="Center"/>
+                                            <TextBlock Text=" МБИТ/С" FontSize="8.5" FontFamily="Consolas" Foreground="#5A6A5E" VerticalAlignment="Bottom" Margin="0,0,0,3"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                                <Border Grid.Column="2" Background="#0A0E0A" CornerRadius="10" BorderBrush="#1F4A2E" BorderThickness="1"
+                                        Padding="10,8" Width="150">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="UPLOAD ↑" FontSize="8.5" FontFamily="Consolas" Foreground="#5A6A5E"/>
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,0,0">
+                                            <TextBlock x:Name="UpText" Text="0.0" FontSize="20" FontWeight="Bold" FontFamily="Consolas" Foreground="#E8FFF0" VerticalAlignment="Center"/>
+                                            <TextBlock Text=" МБИТ/С" FontSize="8.5" FontFamily="Consolas" Foreground="#5A6A5E" VerticalAlignment="Bottom" Margin="0,0,0,3"/>
+                                            <Border Width="3" Height="20" CornerRadius="1.5" Background="#B388FF" Margin="8,0,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+
+                            <Border x:Name="ServerCard" Visibility="Collapsed" Background="#0A0E0A" CornerRadius="12"
+                                    BorderBrush="#1F4A2E" BorderThickness="1" Padding="12,8" Margin="0,6,0,0"
+                                    HorizontalAlignment="Center" Width="308">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Width="30" Height="30" CornerRadius="15" Background="#123F1E" VerticalAlignment="Center">
+                                        <TextBlock x:Name="ServerIso" Text="REPLACE_ISO" FontSize="11" FontWeight="Bold" FontFamily="Consolas" Foreground="#33FF66"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock x:Name="ServerName" Text="НИДЕРЛАНДЫ" FontSize="12" FontWeight="Bold" FontFamily="Consolas" Foreground="#E8FFF0"/>
+                                        <TextBlock x:Name="ServerInfo" Text="не подключено" FontSize="10" FontFamily="Consolas" Foreground="#5A6A5E"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Row="2" Margin="0,0,0,4">
+                        <Border x:Name="ModeBox" Background="#662A101C" CornerRadius="14" Padding="3" BorderBrush="#556A3048" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button x:Name="ModeFull" Style="{StaticResource SegmentButton}" Content="Весь ПК"
+                                        Click="ModeFull_Click"/>
+                                <Button x:Name="ModeSplit" Grid.Column="1" Style="{StaticResource SegmentButton}"
+                                        Content="Сплит" Click="ModeSplit_Click"/>
+                            </Grid>
+                        </Border>
+
+                        <TextBlock x:Name="ModeHint" Text="Весь трафик через REPLACE_COUNTRY (TUN)" FontSize="10.5"
+                                   Foreground="#C48AA0" HorizontalAlignment="Center" Margin="0,7,0,0"/>
+
+                        <TextBlock x:Name="ExitLink" Text="Выход" FontSize="11" Foreground="#C488A0"
+                                   HorizontalAlignment="Center" Margin="0,8,0,0" Cursor="Hand"
+                                   MouseLeftButtonDown="ExitLink_Click"
+                                   ToolTip="Закрыть программу и снять VPN"/>
+
+                        <Grid Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="UpdateBtn" Style="{StaticResource SegmentButton}" Content="Проверка обновлений..."
+                                    FontSize="11.5" FontWeight="Medium" Height="32"
+                                    Background="#3A1428" Foreground="#FFC4D8" Click="UpdateBtn_Click"
+                                    BorderBrush="#6A3048" BorderThickness="1"/>
+                            <Button x:Name="PhoneBtn" Grid.Column="2" Style="{StaticResource SegmentButton}" Content="Телефон"
+                                    FontSize="11.5" FontWeight="Medium" Height="32" Width="88"
+                                    Background="#3A1428" Foreground="#E4B0C4" Click="PhoneBtn_Click"
+                                    ToolTip="QR-код для Android / iPhone"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Border x:Name="LogPanel" Visibility="Collapsed" CornerRadius="18" Background="#F61A0610"
+                BorderBrush="#66FF8FB8" BorderThickness="1" VerticalAlignment="Bottom" Height="260" Margin="8">
+            <Grid Margin="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0">
+                    <TextBlock x:Name="LogTitle" Text="Диагностический лог (Ctrl+L — скрыть)" FontSize="11" FontWeight="SemiBold" Foreground="#E4B0C4"/>
+                    <TextBlock x:Name="LogClose" Text="✕" FontSize="12" Foreground="#FF6BA8" DockPanel.Dock="Right"
+                               HorizontalAlignment="Right" Cursor="Hand" MouseLeftButtonDown="LogClose_Click"/>
+                </DockPanel>
+                <Border x:Name="LogBoxBorder" Grid.Row="1" Background="#1A0810" CornerRadius="10" Padding="8,6" Margin="0,6,0,0" BorderBrush="#6A3048" BorderThickness="1">
+                    <ListBox x:Name="LogBox" Background="Transparent" BorderThickness="0"
+                             Foreground="#E4B0C4" FontFamily="Consolas" FontSize="10"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <ContentPresenter/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Border x:Name="PhonePanel" Visibility="Collapsed" CornerRadius="20" Background="#F61A0610"
+                BorderBrush="#88FF8FB8" BorderThickness="1.5" Margin="14">
+            <Grid Margin="18,14,18,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="26"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0">
+                    <TextBlock x:Name="PhoneTitle" Text="Подключить телефон" FontSize="14" FontWeight="Bold" Foreground="#FFC4D8"/>
+                    <TextBlock x:Name="PhoneClose" Text="✕" FontSize="13" Foreground="#E4B0C4" DockPanel.Dock="Right"
+                               HorizontalAlignment="Right" Cursor="Hand" MouseLeftButtonDown="PhoneClose_Click"/>
+                </DockPanel>
+                <Border x:Name="QrBox" Grid.Row="1" Background="#662A101C" CornerRadius="10" Padding="3" Margin="0,8,0,0"
+                        BorderBrush="#556A3048" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="QrVpnBtn" Style="{StaticResource SegmentButton}" Content="VPN" Height="32"
+                                FontSize="12" Click="QrVpn_Click"/>
+                        <Button x:Name="QrVpn2Btn" Grid.Column="1" Style="{StaticResource SegmentButton}" Content="Vision"
+                                Height="32" FontSize="12" Click="QrVpn2_Click"/>
+                        <Button x:Name="QrTgBtn" Grid.Column="2" Style="{StaticResource SegmentButton}" Content="TG"
+                                Height="32" FontSize="12" Click="QrTg_Click"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" Background="#FFFFFF" CornerRadius="12" Padding="10" Margin="0,12,0,0"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image x:Name="QrImage" Width="210" Height="210" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                </Border>
+                <TextBlock x:Name="QrHint" Grid.Row="3" FontSize="11" Foreground="#E4B0C4" TextWrapping="Wrap"
+                           TextAlignment="Center" Margin="0,12,0,0"/>
+                <TextBox x:Name="QrLink" Grid.Row="4" IsReadOnly="True" FontSize="9.5" FontFamily="Consolas"
+                         Background="#1A0810" Foreground="#E4B0C4" BorderBrush="#6A3048" BorderThickness="1"
+                         Padding="6,4" Margin="0,8,0,0" TextWrapping="Wrap" MaxHeight="54"
+                         VerticalScrollBarVisibility="Auto"/>
+                <Button x:Name="QrCopyBtn" Grid.Row="5" Style="{StaticResource SegmentButton}" Content="Скопировать ссылку" Height="34"
+                        Background="#FF6BA8" Foreground="#2A0814" Margin="0,10,0,0" Click="QrCopy_Click"/>
+            </Grid>
+        </Border>
+
+        <Border x:Name="InstallPanel" Visibility="Collapsed" CornerRadius="20" Background="#F61A0610"
+                BorderBrush="#88FF8FB8" BorderThickness="1.5" Margin="14">
+            <StackPanel VerticalAlignment="Center" Margin="24">
+                <Image Source="Resources/logo.png" Width="44" Height="44" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="InstallTitle" Text="Установить KovchegVPN?" FontSize="18" FontWeight="Bold"
+                           Foreground="#FFC4D8" HorizontalAlignment="Center" Margin="0,14,0,0"/>
+                <TextBlock x:Name="InstallText" Text="Создать ярлык на рабочем столе и перенести в защищенную директорию."
+                           FontSize="12" Foreground="#E4B0C4" TextWrapping="Wrap"
+                           TextAlignment="Center" Margin="0,8,0,20"/>
+                <Button x:Name="InstallBtn" Style="{StaticResource SegmentButton}" Background="#FF6BA8" Foreground="#2A0814"
+                        Content="Установить" Margin="0,0,0,8" Click="BtnInstall_Click"/>
+                <Button x:Name="InstallLaterBtn" Style="{StaticResource SegmentButton}" Background="#3A1428" Foreground="#E4B0C4"
+                        BorderBrush="#6A3048" BorderThickness="1"
+                        Content="Позже" Click="BtnInstallLater_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
