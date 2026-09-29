@@ -839,7 +839,7 @@ public static class ElevatedWorker
             rules.Insert(afterProc + 1, JsonNode.Parse("{\"port\":53,\"action\":\"hijack-dns\"}"));
             rules.Insert(afterProc + 2, JsonNode.Parse("{\"protocol\":\"dns\",\"action\":\"hijack-dns\"}"));
             rules.Insert(afterProc + 3, JsonNode.Parse(
-                "{\"ip_cidr\"::[" + string.Join(",", Cfg.PoisonNets.Select(n => "\"" + n.Cidr + "\"")) +
+                "{\"ip_cidr\":[" + string.Join(",", Cfg.PoisonNets.Select(n => "\"" + n.Cidr + "\"")) +
                 "],\"outbound\":\"block\"}"));
             // Остальной UDP (STUN чужих приложений, LAN) — direct. Иначе каждый
             // UDP = новый SS TCP через UoT, LigaLink забивает трубу.
