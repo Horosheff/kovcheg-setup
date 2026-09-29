@@ -179,9 +179,9 @@ public partial class MainWindow : Window
             if (_ctl.State == VpnState.Full)
             {
                 if (_downMbps + _upMbps > 0.05)
-                    LogBus.Write($"speed: \u2193 {_downMbps:0.1} \u2191 {_upMbps:0.1} \u041c\u0431\u0438\u0442/\u0441");
+                    LogBus.Write($"speed: ↓ {_downMbps:0.1} ↑ {_upMbps:0.1} Мбит/с");
                 else
-                    LogBus.Write($"speed: \u043f\u043e\u0447\u0442\u0438 \u043d\u043e\u043b\u044c \u2193 {_downMbps:0.3} \u2191 {_upMbps:0.3} \u041c\u0431\u0438\u0442/\u0441 \u2014 \u0448\u043b\u044e diag");
+                    LogBus.Write($"speed: почти ноль ↓ {_downMbps:0.3} ↑ {_upMbps:0.3} Мбит/с — шлю diag");
                 _ = Task.Run(() =>
                 {
                     try { Diag.Snapshot("tick"); }
