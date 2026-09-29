@@ -1,1 +1,1 @@
-Иконки и фразы Джарвиса лежат кусками в parts/. scripts/restore-assets.py собирает их в src/KovchegVPN/Resources перед сборкой. build.ps1 и build.sh вызывают его сами.
+Иконки лежат кусками в parts/icons.b64.*. scripts/restore-assets.py собирает их в src/KovchegVPN/Resources перед сборкой. build.ps1 и build.sh вызывают его сами. Голосовые фразы в публичную сборку не входят: без файлов программа молчит и продолжает работать.
