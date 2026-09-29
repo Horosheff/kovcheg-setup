@@ -1,0 +1,7 @@
+src/KovchegVPN/bin/
+src/KovchegVPN/obj/
+client.env
+dist/
+*.user
+*.exe
+*.pdb
