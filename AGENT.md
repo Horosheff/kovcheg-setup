@@ -49,7 +49,7 @@ scp dist\KovchegVPN.exe root@IP:/var/www/html/KovchegVPN.exe
 ssh root@IP bash /root/kovcheg/publish-release.sh 1.0.0 "первая сборка"
 ```
 
-`build.ps1` сам восстанавливает иконки и голос из `assets/parts`, штампует ключи во временную копию и публикует `dist/KovchegVPN.exe`. Каталог `src` после сборки по-прежнему с заглушками `203.0.113.10` и `REPLACE_*`.
+`build.ps1` сам восстанавливает иконки из `assets/parts`, штампует ключи во временную копию и публикует `dist/KovchegVPN.exe`. Каталог `src` после сборки по-прежнему с заглушками `203.0.113.10` и `REPLACE_*`. Голосовых файлов в репозитории нет, на работу туннеля это не влияет.
 
 Ссылка человеку: `http://IP/KovchegVPN.exe`
 
@@ -57,7 +57,7 @@ ssh root@IP bash /root/kovcheg/publish-release.sh 1.0.0 "первая сборк
 
 ## Маршрутизация, которую нельзя перевернуть
 
-YouTube в этой сборке идёт через VPN. Его нет в `HomeDirectSuffixes`, нет в прямом списке sing-box и нет в российском обходе системного прокси. Он есть в `DomainForceProxy` и в DNS-списке туннеля.
+YouTube в этой сборке идёт **через VPN**. Его нет в `HomeDirectSuffixes`, нет в прямом списке sing-box и нет в российском обходе системного прокси. Он есть в `DomainForceProxy` и в DNS-списке туннеля.
 
 Так и должно остаться: у обычного провайдера YouTube режется, напрямую его не открыть. Не возвращайте `youtube.com`, `googlevideo.com`, `ytimg.com`, `ggpht.com`, `googleusercontent.com` в прямой обход.
 
