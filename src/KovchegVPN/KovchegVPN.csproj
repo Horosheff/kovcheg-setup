@@ -25,17 +25,6 @@
     <EmbeddedResource Include="Resources\kovcheg_off.ico" />
     <EmbeddedResource Include="Resources\singbox-tun.json" />
     <EmbeddedResource Include="Resources\kovcheg-xray.json" />
-    <EmbeddedResource Include="Resources\jarvis-16.wav" />
-    <EmbeddedResource Include="Resources\jarvis-25.wav" />
-    <EmbeddedResource Include="Resources\jarvis-32.wav" />
-    <EmbeddedResource Include="Resources\jarvis-35.wav" />
-    <EmbeddedResource Include="Resources\jarvis-45.wav" />
-    <EmbeddedResource Include="Resources\jarvis-46.wav" />
-    <EmbeddedResource Include="Resources\jarvis-47.wav" />
-    <EmbeddedResource Include="Resources\jarvis-48.wav" />
-    <EmbeddedResource Include="Resources\jarvis-50.wav" />
-    <EmbeddedResource Include="Resources\jarvis-51.wav" />
-    <EmbeddedResource Include="Resources\jarvis-53.wav" />
   </ItemGroup>
 
   <ItemGroup>
